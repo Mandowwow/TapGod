@@ -15,6 +15,10 @@ public class PlayButton : MonoBehaviour
 
     public UnityEvent buttonTouch;
 
+    //Timer vars
+    private bool timerActive = false;
+    private float timerDuration = 5f;
+
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -25,7 +29,7 @@ public class PlayButton : MonoBehaviour
 
     void Update()
     {
-        if (Input.touchCount > 0)
+        if (Input.touchCount > 0 && !timerActive)
         {
             foreach (Touch touch in Input.touches)
             {
@@ -40,6 +44,7 @@ public class PlayButton : MonoBehaviour
                         isTouchingButton = true;
                         currentTouchId = touch.fingerId;
                         buttonTouch.Invoke();
+                        StartCoroutine(StartTimer());
                     }
 
                     if (touch.fingerId == currentTouchId && (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled))
@@ -51,5 +56,17 @@ public class PlayButton : MonoBehaviour
                 }
             }
         }
+    }
+
+    IEnumerator StartTimer()
+    {
+        
+        yield return new WaitForSeconds(timerDuration); 
+        DisableButton(); 
+    }
+
+    void DisableButton()
+    {
+        timerActive = true; 
     }
 }
