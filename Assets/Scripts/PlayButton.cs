@@ -9,10 +9,6 @@ public class PlayButton : MonoBehaviour
     public Sprite defaultSprite;
     public Sprite pressedSprite; 
 
-    private bool isTouchingButton = false;
-
-    private int currentTouchId = -1;
-
     public UnityEvent buttonTouch;
 
     //Timer vars
