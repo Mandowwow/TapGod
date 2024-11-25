@@ -31,27 +31,27 @@ public class PlayButton : MonoBehaviour
     {
         if (Input.touchCount > 0 && !timerActive)
         {
-            foreach (Touch touch in Input.touches)
+            Touch[] touches = Input.touches;
+
+            // Process only the first touch in the array
+            for (int i = 0; i < touches.Length; i++)
             {
+                Touch touch = touches[i];
                 Vector2 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
 
                 if (GetComponent<Collider2D>().OverlapPoint(touchPosition))
                 {
-                    if ((touch.phase == TouchPhase.Began || touch.phase == TouchPhase.Stationary) && !isTouchingButton )
+                    if (touch.phase == TouchPhase.Began)
                     {
-
                         spriteRenderer.sprite = pressedSprite;
-                        isTouchingButton = true;
-                        currentTouchId = touch.fingerId;
                         buttonTouch.Invoke();
                         StartCoroutine(StartTimer());
+                        break; // Only process the first valid touch in this frame
                     }
 
-                    if (touch.fingerId == currentTouchId && (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled))
+                    if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
                     {
                         spriteRenderer.sprite = defaultSprite;
-                        isTouchingButton = false;
-                        currentTouchId = -1;
                     }
                 }
             }
