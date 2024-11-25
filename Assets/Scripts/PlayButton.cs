@@ -13,7 +13,11 @@ public class PlayButton : MonoBehaviour
 
     //Timer vars
     private bool timerActive = false;
-    private float timerDuration = 5f;
+    private float timerDuration = 10f;
+
+    //Prefab spawning variables
+    public List<GameObject> prefabs;
+    public Camera mainCamera;
 
     void Start()
     {
@@ -21,6 +25,8 @@ public class PlayButton : MonoBehaviour
 
         buttonTouch.AddListener(GameObject.FindFirstObjectByType<GameController>().IncrementScore);
         buttonTouch.AddListener(GameObject.FindFirstObjectByType<UIController>().UpdateScore);
+
+        buttonTouch.AddListener(SpawnRandomPrefab);
     }
 
     void Update()
@@ -64,5 +70,32 @@ public class PlayButton : MonoBehaviour
     void DisableButton()
     {
         timerActive = true; 
+    }
+
+    void SpawnRandomPrefab()
+    {
+        if (prefabs.Count == 0 || mainCamera == null)
+        {
+            Debug.LogWarning("Prefab list empty");
+            return;
+        }
+
+        GameObject randomPrefab = prefabs[Random.Range(0, prefabs.Count)];
+
+        Vector2 randomPosition = GetRandomScreenPosition();
+
+        Instantiate(randomPrefab, randomPosition, Quaternion.identity);
+    }
+
+    Vector2 GetRandomScreenPosition()
+    {
+        // Get screen bounds in world space
+        float screenWidth = mainCamera.orthographicSize * 2f * mainCamera.aspect;
+        float screenHeight = mainCamera.orthographicSize * 2f;
+
+        float x = Random.Range(-screenWidth / 2f, screenWidth / 2f);
+        float y = Random.Range(-screenHeight / 2f, screenHeight / 2f);
+
+        return new Vector2(x, y);
     }
 }
