@@ -24,6 +24,9 @@ public class PlayButton : MonoBehaviour
     private AudioSource audioSource;
     public AudioClip timerEndSoundClip;
 
+    //Other buttons
+    public GameObject restartButton;
+
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -77,8 +80,9 @@ public class PlayButton : MonoBehaviour
 
     void DisableButton()
     {
-        timerActive = true; 
+        timerActive = true;
         PlaySound(timerEndSoundClip);
+        restartButton.SetActive(true);
     }
 
     void SpawnRandomPrefab()
