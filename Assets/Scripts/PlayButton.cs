@@ -13,20 +13,28 @@ public class PlayButton : MonoBehaviour
 
     //Timer vars
     private bool timerActive = false;
-    private float timerDuration = 10f;
+    private float timerDuration = 5f;
 
     //Prefab spawning variables
     public List<GameObject> prefabs;
     public Camera mainCamera;
 
+    //Audio variables
+    public AudioClip soundClip;
+    private AudioSource audioSource;
+    public AudioClip timerEndSoundClip;
+
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        audioSource = GetComponent<AudioSource>();
 
         buttonTouch.AddListener(GameObject.FindFirstObjectByType<GameController>().IncrementScore);
         buttonTouch.AddListener(GameObject.FindFirstObjectByType<UIController>().UpdateScore);
 
         buttonTouch.AddListener(SpawnRandomPrefab);
+
+        buttonTouch.AddListener(delegate { PlaySound(soundClip); });
     }
 
     void Update()
@@ -70,6 +78,7 @@ public class PlayButton : MonoBehaviour
     void DisableButton()
     {
         timerActive = true; 
+        PlaySound(timerEndSoundClip);
     }
 
     void SpawnRandomPrefab()
@@ -97,5 +106,16 @@ public class PlayButton : MonoBehaviour
         float y = Random.Range(-screenHeight / 2f, screenHeight / 2f);
 
         return new Vector2(x, y);
+    }
+
+    void PlaySound(AudioClip sound)
+    {
+        if (soundClip == null || audioSource == null)
+        {
+            Debug.LogWarning("No sound added");
+            return;
+        }
+
+        audioSource.PlayOneShot(sound);
     }
 }
