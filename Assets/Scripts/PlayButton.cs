@@ -27,13 +27,13 @@ public class PlayButton : MonoBehaviour
     //Other buttons
     public GameObject restartButton;
 
+    //Event for button press to notify listeners
+    public static event System.Action OnButtonPressed;
+
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         audioSource = GetComponent<AudioSource>();
-
-        buttonTouch.AddListener(GameObject.FindFirstObjectByType<GameController>().IncrementScore);
-        buttonTouch.AddListener(GameObject.FindFirstObjectByType<UIController>().UpdateScore);
 
         buttonTouch.AddListener(SpawnRandomPrefab);
 
@@ -58,8 +58,14 @@ public class PlayButton : MonoBehaviour
                     {
                         spriteRenderer.sprite = pressedSprite;
                         buttonTouch.Invoke();
+
+                        // notify global event
+                        OnButtonPressed?.Invoke();
+
                         StartCoroutine(StartTimer());
-                        break; // Only process the first valid touch in this frame
+
+                        // Only process the first valid touch in this frame
+                        break; 
                     }
 
                     if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
