@@ -19,11 +19,6 @@ public class PlayButton : MonoBehaviour
     public List<GameObject> prefabs;
     public Camera mainCamera;
 
-    //Audio variables
-    public AudioClip soundClip;
-    private AudioSource audioSource;
-    public AudioClip timerEndSoundClip;
-
     //Other buttons
     public GameObject restartButton;
 
@@ -33,11 +28,8 @@ public class PlayButton : MonoBehaviour
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-        audioSource = GetComponent<AudioSource>();
 
         buttonTouch.AddListener(SpawnRandomPrefab);
-
-        buttonTouch.AddListener(delegate { PlaySound(soundClip); });
     }
 
     void Update()
@@ -87,7 +79,7 @@ public class PlayButton : MonoBehaviour
     void DisableButton()
     {
         timerActive = true;
-        PlaySound(timerEndSoundClip);
+        FindObjectOfType<AudioController>()?.PlayTimerEndSound();
         restartButton.SetActive(true);
     }
 
@@ -118,14 +110,4 @@ public class PlayButton : MonoBehaviour
         return new Vector2(x, y);
     }
 
-    void PlaySound(AudioClip sound)
-    {
-        if (soundClip == null || audioSource == null)
-        {
-            Debug.LogWarning("No sound added");
-            return;
-        }
-
-        audioSource.PlayOneShot(sound);
-    }
 }
