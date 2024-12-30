@@ -15,10 +15,6 @@ public class PlayButton : MonoBehaviour
     private bool timerActive = false;
     private float timerDuration = 5f;
 
-    //Prefab spawning variables
-    public List<GameObject> prefabs;
-    public Camera mainCamera;
-
     //Other buttons
     public GameObject restartButton;
 
@@ -28,8 +24,6 @@ public class PlayButton : MonoBehaviour
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
-
-        buttonTouch.AddListener(SpawnRandomPrefab);
     }
 
     void Update()
@@ -81,33 +75,6 @@ public class PlayButton : MonoBehaviour
         timerActive = true;
         FindObjectOfType<AudioController>()?.PlayTimerEndSound();
         restartButton.SetActive(true);
-    }
-
-    void SpawnRandomPrefab()
-    {
-        if (prefabs.Count == 0 || mainCamera == null)
-        {
-            Debug.LogWarning("Prefab list empty");
-            return;
-        }
-
-        GameObject randomPrefab = prefabs[Random.Range(0, prefabs.Count)];
-
-        Vector2 randomPosition = GetRandomScreenPosition();
-
-        Instantiate(randomPrefab, randomPosition, Quaternion.identity);
-    }
-
-    Vector2 GetRandomScreenPosition()
-    {
-        // Get screen bounds in world space
-        float screenWidth = mainCamera.orthographicSize * 2f * mainCamera.aspect;
-        float screenHeight = mainCamera.orthographicSize * 2f;
-
-        float x = Random.Range(-screenWidth / 2f, screenWidth / 2f);
-        float y = Random.Range(-screenHeight / 2f, screenHeight / 2f);
-
-        return new Vector2(x, y);
     }
 
 }
