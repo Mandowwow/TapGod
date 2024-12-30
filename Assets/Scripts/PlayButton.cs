@@ -9,8 +9,6 @@ public class PlayButton : MonoBehaviour
     public Sprite defaultSprite;
     public Sprite pressedSprite; 
 
-    public UnityEvent buttonTouch;
-
     //Timer vars
     private bool timerActive = false;
     private float timerDuration = 5f;
@@ -43,7 +41,6 @@ public class PlayButton : MonoBehaviour
                     if (touch.phase == TouchPhase.Began)
                     {
                         spriteRenderer.sprite = pressedSprite;
-                        buttonTouch.Invoke();
 
                         // notify global event
                         OnButtonPressed?.Invoke();
